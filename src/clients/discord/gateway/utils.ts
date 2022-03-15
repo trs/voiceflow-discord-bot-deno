@@ -1,7 +1,7 @@
 import {Operation} from '../operation/base.ts';
 import type {IOperation} from '../operation/base.ts';
 
-export function EventGuard(guard: (value: unknown) => boolean): MethodDecorator {
+export function MessageGuard(guard: (value: unknown) => boolean): MethodDecorator {
   return function (target, _p, descriptor: TypedPropertyDescriptor<any>) {
     const originalMethod = descriptor.value;
 
@@ -16,6 +16,6 @@ export function EventGuard(guard: (value: unknown) => boolean): MethodDecorator 
   };
 }
 
-export function EventOpGuard<OP extends IOperation, T extends Operation<OP>>(instance: T): MethodDecorator {
-  return EventGuard(instance.isOperation.bind(instance));
+export function MessageOpGuard<OP extends IOperation, T extends Operation<OP>>(instance: T): MethodDecorator {
+  return MessageGuard(instance.isOperation.bind(instance));
 }

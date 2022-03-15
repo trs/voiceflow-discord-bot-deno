@@ -1,4 +1,4 @@
-import {EventGuard, EventOpGuard} from './utils.ts';
+import {MessageGuard, MessageOpGuard} from './utils.ts';
 import * as Op from '../operation/mod.ts';
 import type * as OpType from '../operation/mod.ts';
 import type {IEventType} from '../types/mod.ts';
@@ -110,12 +110,12 @@ export class GatewayConnection extends EventTarget {
     this.heartbeatAcknowledged = true;
   }
 
-  @EventGuard(Op.isOperation)
+  @MessageGuard(Op.isOperation)
   private handleAll({data}: MessageEvent<OpType.IOperation>) {
     this.sequenceKey = data.s ?? null;
   }
 
-  @EventOpGuard(Op.HelloOperation)
+  @MessageOpGuard(Op.HelloOperation)
   private handleHello({data}: MessageEvent<OpType.IHelloOperation>) {
     this.heartbeatInterval = setInterval(() => {
       // If we never got a response that the previous heartbeat was acknowledged,
@@ -134,18 +134,18 @@ export class GatewayConnection extends EventTarget {
     this.ready = true;
   }
 
-  @EventOpGuard(Op.HeartbeatAckOperation)
+  @MessageOpGuard(Op.HeartbeatAckOperation)
   private handleHeartbeatAck(_evt: MessageEvent<OpType.IHeartbeatAckOperation>) {
     // Confirm heartbeat ack
     this.heartbeatAcknowledged = true;
   }
 
-  @EventOpGuard(Op.ReadyOperation)
+  @MessageOpGuard(Op.ReadyOperation)
   private handleReady({data}: MessageEvent<OpType.IReadyOperation>) {
     this.sessionID = data.d.session_id;
   }
 
-  @EventOpGuard(Op.ReconnectOperation)
+  @MessageOpGuard(Op.ReconnectOperation)
   private handleReconnect(_evt: MessageEvent<OpType.IReconnectOperation>) {
     this.#reconnect();
   }
